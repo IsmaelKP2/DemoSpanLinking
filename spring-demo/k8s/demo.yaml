@@ -1,0 +1,90 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-service
+  labels:
+    app: demo-service
+    component: demo-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-service
+      component: demo-service
+  template:
+    metadata:
+      labels:
+        service: demo-service
+        app: demo-service
+        component: demo-service
+    spec:
+      tolerations:
+        - key: node
+          operator: Equal
+          value: otel-small
+          effect: NoSchedule
+      containers:
+        - name: demo-service
+          image: dineshgurumurthydd/apps:v1.0-spring-demo
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: 500Mi
+              cpu: 1
+            requests:
+              memory: 500Mi
+              cpu: 1
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+              # The application SDK must use this environment variable in order to succesfully
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://$(HOST_IP):4318"
+            - name: OTEL_K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: OTEL_K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: OTEL_K8S_POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: OTEL_SERVICE_NAME
+              value: "demo-service"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.name=$(OTEL_SERVICE_NAME),k8s.namespace.name=$(OTEL_K8S_NAMESPACE),k8s.node.name=$(OTEL_K8S_NODE_NAME),k8s.pod.name=$(OTEL_K8S_POD_NAME),deployment.environment=$(OTEL_K8S_NAMESPACE),host.name=$(OTEL_K8S_NODE_NAME)
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-service
+  labels:
+    app: demo-service
+    component: demo-service
+spec:
+  clusterIP: None
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: demo-service
+    component: demo-service
+---
+
