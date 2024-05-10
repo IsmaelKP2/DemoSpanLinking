@@ -1,0 +1,27 @@
+version: "2.4"
+services:
+  telemetrygen:
+    image: spanlinking
+    container_name: spanlinking
+    environment:
+      - service.name=java-service
+      - deployment.environment=test-spanlink-env
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otelcollector:4318
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    ports:
+      - 18000:8000
+      - 8080:8080
+    depends_on:
+      - otelcollector
+    links:
+      - "otelcollector"
+  #OpenTelemetry Collector
+  otelcollector:
+    image:  quay.io/signalfx/splunk-otel-collector:latest
+    container_name: otelcollector
+    command: ["--config=/etc/otel-collector-config.yml", "--set=service.telemetry.logs.level=debug"]
+    volumes:
+      - ./otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+    - 4317:4317
+    - 4318:4318

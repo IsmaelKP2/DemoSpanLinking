@@ -1,0 +1,45 @@
+receivers:
+    otlp:
+      protocols:
+        http:
+          endpoint: 0.0.0.0:4318
+        grpc:
+          endpoint: 0.0.0.0:4317
+
+exporters:
+    # debug:
+    #   verbosity: detailed
+    sapm:
+      access_token: "7UJVg1u8H_VidUkksxyJKQ"
+      endpoint: "https://ingest.us1.signalfx.com/v2/trace"
+    signalfx:
+      access_token: "7UJVg1u8H_VidUkksxyJKQ"
+      api_url: https://api.us1.signalfx.com
+      correlation: null
+      ingest_url: https://ingest.us1.signalfx.com
+      sync_host_metadata: true
+
+
+
+processors:
+    batch:
+
+extensions:
+    health_check:
+      endpoint: 0.0.0.0:13133
+    pprof:
+      endpoint: :1888
+    zpages:
+      endpoint: :55679
+
+service:
+    extensions: [pprof, zpages, health_check]
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [sapm]
+      metrics:
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [signalfx]
