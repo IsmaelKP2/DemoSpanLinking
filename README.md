@@ -1,15 +1,15 @@
 # Pre-reqs 
 
--Docker Compose
--Observability Cloud environment and Ingest token
+- Docker Compose
+- Observability Cloud environment and Ingest token
 
 # How to set up the project
 
--Build the docker compose Stack 
+- Build the docker compose Stack 
 
 ```docker compose up``` 
 
--Generate request on the stack 
+- Generate request on the stack 
 
 Test that the api is reachable:
 
