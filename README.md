@@ -1,9 +1,9 @@
-#Pre-reqs 
+# Pre-reqs 
 
 -Docker Compose
 -Observability Cloud environment and Ingest token
 
-#How to set up the project
+# How to set up the project
 
 -Build the docker compose Stack 
 
