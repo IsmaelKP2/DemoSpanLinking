@@ -31,8 +31,12 @@ What you should see in Observability Cloud :
 
 View the Service Map:
 
+![ServiceMapView](https://raw.githubusercontent.com/IsmaelKP2/DemoSpanLinking/main/img/ServiceMapView.png)
 
-Click of a successful trace on the recursive endpoint (allow a little time for the trace to appear in the UI):
+Navigating to the trace analzer, click of a successful trace on the recursive endpoint (allow a little time for the trace to appear in the UI):
+
+![TraceAnalyzerView](https://raw.githubusercontent.com/IsmaelKP2/DemoSpanLinking/main/img/TraceAnalyzerView.png)
+
 
 Notice the link symbol in the trace detail:
 
@@ -80,7 +84,10 @@ In the CustomRecursive task we retrieve the Tracer build the span and add the li
 ```
 
 Click the link in the Span link section of the trace detail:
+![Span Link](https://raw.githubusercontent.com/IsmaelKP2/DemoSpanLinking/main/img/SpanLink.png)
 
 View of the linked trace:
+![RecursiveTraceDetail](https://raw.githubusercontent.com/IsmaelKP2/DemoSpanLinking/main/img/RecursiveTraceDetail.png)
+
 
 
